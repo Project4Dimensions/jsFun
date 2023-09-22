@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="IndexedDB.js: a practical alternative to MDN’s example">
+<meta name="author" content="Project4Dimensions">
+<meta name="keywords" content="IndexedDB.js: practical alternative MDN’s example">
+<meta name="application-name" content="indexedDB.js">
+<meta name="msapplication-config" content="assets/favicons/browserconfig.xml">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicons/favicon-16x16.png">
+<link rel="manifest" href="assets/favicons/manifest.json">
+<link rel="mask-icon" color="#5bbad5" href="assets/favicons/safari-pinned-tab.svg">
+<link rel="shortcut icon" href="assets/favicons/favicon.ico">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+<link rel="stylesheet "href="assets/css/style2.css">
+<style>
+.float-start {float: left !important;}
+.float-end {float: right !important;}
+.text-start {text-align: left !important;}
+.text-end {text-align: right !important;}
+</style>
+<title>IndexedDB&nbsp;accordion&nbsp;· jsFun&nbsp;· Project4Dimensions</title>
+</head>
+
+<body class="d-flex flex-column h-100">
+<!-- [if lte IE 9]><p>(cf., https://browsehappy.com/)</p><![endif] -->
+<noscript><p>JavaScript required to view this page</p></noscript>
+
+<main role="main" class="container flex-shrink-0">
+
+  <header class="px-3 pb-3">
+    <!-- https://getbootstrap.com/docs/4.6/utilities/borders/ -->
+    <div class="row border-bottom">
+      <div class="col-sm-8">
+        <div class="lead text-start">
+          IndexedDB&nbsp;accordion&nbsp;· jsFun&nbsp;· Project4Dimensions
+        </div>
+        <div class="lead text-start"></div>
+      </div>
+      <div class="col-sm-4"></div>
+    </div>
+    <div class="row">
+      <div class="col-sm-4"></div>
+      <div class="col-sm-8">
+        <div class="lead mt-1 text-end">
+          <small>a practical alternative to MDN’s example</small>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div id="alert" class="card mt-2 mb-3" style="display: none; border-color: #f5c6cb;">
+    <div class="card-header text-secondary" style="background-color: #f8d7da; border-bottom-color: #f5c6cb;">
+      alert
+      </div>
+    <div class="card-body text-secondary" id="alertOutput" style="font-size: 13px;">
+    </div>
+    <div class="card-footer" style="border-top-color: #f5c6cb;">
+      <div class="form-row">
+        <div class="col-2">
+          <button type="button" class="btn btn-outline-secondary btn-sm btn-block" style="font-size: 13px; background-color: #f8d7da; border-color: #f5c6cb;" onclick="clearNodes('alertOutput')">
+            clear
+          </button>
+        </div>
+        <div class="col-2">
+          <button type="button" class="btn btn-outline-secondary btn-sm btn-block" style="font-size: 13px; background-color: #f8d7da; border-color: #f5c6cb;" onclick="hide('alert')">
+            hide
+          </button>
+        </div>
+      </div>
+      <!-- /div class="form-row" -->
+    </div>
+    <!-- /div class="card-footer" -->
+  </div>
+  <!-- id="alert" -->
+
+  <div id="accordion" class="accordion mb-3">
+    <!--
+    <div id="" class="card-header bg-info mb-1" style="transform: rotate(0);">
+      <a href="#contentCreate" data-target="#contentCreate" aria-controls="contentCreate" data-toggle="collapse" aria-expanded="true" role="button" class="stretched-link text-white">
+        create
+      </a>
+    </div>
+    <div id="contentCreate" aria-labelledby="navCreate" data-parent="#accordion" class="collapse show" >
+    </div>
+    -->
+    <nav class="border mb-1" style="padding: 0.10rem !important; background-color: rgba(0, 0, 0, 0.03);">
+      <button id="navCreate" href="#contentCreate" data-target="#contentCreate" aria-controls="contentCreate" aria-expanded="true" data-toggle="collapse" type="button" class="btn btn-info btn-block text-left">
+        create
+      </button>
+    </nav>
+    <div id="contentCreate" aria-labelledby="navCreate" data-parent="#accordion" class="collapse show">
+      <div aria-label="cardGroupCreate" class="card-group">
+        <div aria-label="cardInputCreate" class="card mb-1">
+          <form id="formCreate" accept-charset="utf-8" method="get" action="#">
+            <div class="card-header text-secondary">create record</div>
+            <div class="card-body">
+              <div class="form-row mb-2">
+                <div class="col">
+                  <input id="ssnCreate" aria-describedby="ssnCreateHelp" value="666-66-6666" type="text" class="form-control form-control-sm">
+                  <small id="ssnCreateHelp" class="text-secondary">
+                    ssn
+                  </small>
+                </div>
+                <div class="col">
+                  <input id="nameCreate" aria-describedby="nameCreateHelp" value="Adam" type="text" class="form-control form-control-sm">
+                  <small id="nameCreateHelp" class="text-secondary">
+                    name
+                  </small>
+                </div>
+              </div>
+              <!-- class="form-row mb-2" -->
+              <div class="form-row">
+                <div class="col">
+                  <input id="ageCreate" aria-describedby="ageCreateHelp" value="50" type="number" class="form-control form-control-sm">
+                  <small id="ageCreateHelp" class="text-secondary">
+                    age
+                  </small>
+                </div>
+                <div class="col">
+                  <input id="emailCreate" aria-describedby="emailCreateHelp" value="adam@world.org" type="text" class="form-control form-control-sm">
+                  <small id="emailCreateHelp" class="text-secondary">
+                    email
+                  </small>
+                </div>
+              </div>
+              <!-- class="form-row" -->
+            </div>
+            <!-- class="card-body" -->
+            <div class="card-footer">
+              <div class="form-row">
+                <div class="col">
+                  <button onclick="create()" type="button" class="btn btn-info btn-sm form-control form-control-sm">
+                    create record
+                  </button>
+                </div>
+                <div class="col">
+                  <button onclick="formCreate.reset()" type="button" class="btn btn-info btn-sm form-control form-control-sm">
+                    reset create
+                  </button>
+                </div>
+              </div>
+              <!-- class="form-row" -->
+            </div>
+            <!-- class="card-footer" -->
+          </form>
+          <!--  id="formCreate" -->
+        </div>
+        <!-- aria-label="cardInputCreate" -->
+        <div id="cardOutputCreate" class="card mb-1">
+          <div class="card-header text-secondary">create output</div>
+          <div id="outputCreate" class="card-body">
+          </div>
+          <div class="card-footer">
+            <div class="form-row">
+              <div class="col-6">
+                <button onclick="clearNodes2('outputCreate', 0)" type="button" class="btn btn-info btn-sm form-control form-control-sm">
+                  clear create output
+                </button>
+              </div>
+            </div>
+            <!-- class="form-row" -->
+          </div>
+          <!-- class="card-footer" -->
+        </div>
+        <!-- id="cardOutputCreate"-->
+      </div>
+      <!-- aria-label="cardGroupCreate" -->
+    </div>
+    <!-- id="contentCreate" -->
+    <nav class="border mb-1" style="padding: 0.10rem !important; background-color: rgba(0, 0, 0, 0.03);">
+      <button id="navRetrieve" href="#contentRetrieve" data-target="#contentRetrieve" aria-controls="contentRetrieve" aria-expanded="false" data-toggle="collapse" type="button" class="btn btn-info btn-block text-left">
+        retrieve
+      </button>
+    </nav>
+    <div id="contentRetrieve" aria-labelledby="navRetrieve" data-parent="#accordion" class="collapse">
+      <div aria-label="cardGroupRetrieve" class="card-group">
+        <div aria-label="cardInputRetrieve" class="card mb-1">
+          <form id="formRetrieve" accept-charset="utf-8" method="get" action="#">
+            <div class="card-header text-secondary">retrieve record</div>
+            <div class="card-body">
+              <div class="form-row">
+                <div class="col">
+                  <input id="ssnRetrieve" aria-describedby="ssnRetrieveHelp" value="666-66-6666" type="text" class="form-control form-control-sm">
+                  <small class="text-secondary" id="ssnRetrieveHelp">
+                    ssn
+                  </small>
+                </div>
+              </div>
+              <!-- class="form-row" -->
+            </div>
+            <!-- class="card-body" -->
+            <div class="card-footer">
+              <div class="form-row">
+                <div class="col">
+                  <button onclick="retrieve()" type="button" class="btn btn-info btn-sm form-control form-control-sm">
+                    retrieve record
+                  </button>
+                </div>
+                <div class="col">
+                  <button onclick="formRetrieve.reset()" type="button" class="btn btn-info btn-sm form-control form-control-sm">
+                    reset retrieve
+                  </button>
+                </div>
+              </div>
+              <!-- class="form-row" -->
+            </div>
+            <!-- class="card-footer" -->
+          </form>
+          <!--  id="formRetrieve" -->
+        </div>
+        <!-- aria-label="cardInputRetrieve" -->
+        <div id="cardOutputRetrieve" class="card mb-1">
+          <div class="card-header text-secondary">retrieve output</div>
+          <div id="outputRetrieve" class="card-body">
+          </div>
+          <div class="card-footer">
+            <div class="form-row">
+              <div class="col-6">
+                <button onclick="clearNodes2('outputRetrieve', 0)" type="button" class="btn btn-info btn-sm form-control form-control-sm">
+                  clear retrieve output
+                </button>
+              </div>
+            </div>
+            <!-- class="form-row" -->
+          </div>
+          <!-- class="card-footer" -->
+        </div>
+        <!-- id="cardOutputRetrieve" -->
+      </div>
+      <!-- aria-label="cardGroupRetrieve -->
+    </div>
+    <!-- id="contentRetrieve" -->
+    <nav class="border mb-1" style="padding: 0.10rem !important; background-color: rgba(0, 0, 0, 0.03);">
+      <button id="navUpdate" href="#contentUpdate" data-target="#contentUpdate" aria-controls="contentUpdate" aria-expanded="false" data-toggle="collapse" type="button" class="btn btn-info btn-block text-left">
+        update
+      </button>
+    </nav>
+    <div id="contentUpdate" aria-labelledby="navUpdate" data-parent="#accordion" class="collapse">
+      <div aria-label="cardGroupUpdate" class="card-group">
+        <div aria-label="cardInputUpdate" class="card mb-1">
+          <form id="formUpdate" accept-charset="utf-8" method="get" action="#">
+            <div class="card-header text-secondary">update record</div>
+            <div class="card-body">
+              <div class="form-row mb-2">
+                <div class="col">
+                  <input id="ssnUpdate" aria-describedby="ssnUpdateHelp" value="555-55-5555" type="text" class="form-control form-control-sm">
+                  <small id="ssnUpdateHelp" class="text-secondary">
+                    ssn
+                  </small>
+                </div>
+                <div class="col">
+                  <input id="nameUpdate" aria-describedby="nameUpdateHelp" value="Donna" type="text" class="form-control form-control-sm">
+                  <small id="nameUpdateHelp" class="text-secondary">
+                    name
+                  </small>
+                </div>
+              </div>
+              <!-- class="form-row mb-2" -->
+              <div class="form-row">
+                <div class="col">
+                  <input id="ageUpdate" aria-describedby="ageUpdateHelp" value="32" type="number" class="form-control form-control-sm">
+                  <small id="ageUpdateHelp" class="text-secondary">
+                    age
+                  </small>
+                </div>
+                <div class="col">
+                  <input id="emailUpdate" aria-describedby="emailUpdateHelp" value="donna@home.org" type="text" class="form-control form-control-sm">
+                  <small id="emailUpdateHelp" class="text-secondary">
+                    email
+                  </small>
+                </div>
+              </div>
+              <!-- class="form-row" -->
+            </div>
+            <!-- class="card-body" -->
+            <div class="card-footer">
+              <div class="form-row">
+                <div class="col">
+                  <button onclick="update()" type="button" class="btn btn-info btn-sm form-control form-control-sm">
+                    update record
+                  </button>
+                </div>
+                <div class="col">
+                  <button onclick="formUpdate.reset()" type="button" class="btn btn-info btn-sm form-control form-control-sm">
+                    reset update
+                  </button>
+                </div>
+              </div>
+              <!-- class="form-row" -->
+            </div>
+            <!-- class="card-footer" -->
+          </form>
+          <!--  id="formUpdate" -->
+        </div>
+        <!-- aria-label="cardInputUpdate" -->
+        <div id="cardOutputUpdate" class="card mb-1">
+          <div class="card-header text-secondary">update output</div>
+          <div id="outputUpdate" class="card-body">
+          </div>
+          <div class="card-footer">
+            <div class="form-row">
+              <div class="col-6">
+                <button onclick="clearNodes2('outputUpdate', 0)" type="button" class="btn btn-info btn-sm form-control form-control-sm">
+                  clear update output
+                </button>
+              </div>
+            </div>
+            <!-- class="form-row" -->
+          </div>
+          <!-- class="card-footer" -->
+        </div>
+        <!-- id="cardOutputUpdate" -->
+      </div>
+      <!-- aria-label="cardGroupUpdate" -->
+    </div>
+    <!-- id="contentUpdate" -->
+    <nav class="border mb-1" style="padding: 0.10rem !important; background-color: rgba(0, 0, 0, 0.03);">
+      <button id="navDelete" href="#contentDelete" data-target="#contentDelete" aria-controls="contentDelete" aria-expanded="false" data-toggle="collapse" type="button" class="btn btn-info btn-block text-left">
+        delete
+      </button>
+    </nav>
+    <div id="contentDelete" aria-labelledby="navDelete" data-parent="#accordion" class="collapse">
+      <div aria-label="cardGroupDelete" class="card-group">
+        <div aria-label="cardInputDelete" class="card mb-1">
+          <form id="formDelete" accept-charset="utf-8" method="get" action="#">
+            <div class="card-header text-secondary">delete record</div>
+            <div class="card-body">
+              <div class="form-row mb-2">
+                <div class="col">
+                  <input id="ssnDelete" aria-describedby="ssnDeleteHelp" value="666-66-6666" type="text" class="form-control form-control-sm">
+                  <small id="ssnDeleteHelp" class="text-secondary">
+                    ssn
+                  </small>
+                </div>
+                <div class="col">
+                  <input id="nameDelete" aria-describedby="nameDeleteHelp" value="Adam" type="text" class="form-control form-control-sm">
+                  <small id="nameDeleteHelp" class="text-secondary">
+                    name
+                  </small>
+                </div>
+              </div>
+              <!-- class="form-row mb-2" -->
+              <div class="form-row">
+                <div class="col">
+                  <input id="ageDelete" aria-describedby="ageDeleteHelp" value="50" type="number" class="form-control form-control-sm">
+                  <small id="ageDeleteHelp" class="text-secondary">
+                    age
+                  </small>
+                </div>
+                <div class="col">
+                  <input id="emailDelete" aria-describedby="emailDeleteHelp" value="adam@world.org" type="text" class="form-control form-control-sm">
+                  <small id="emailDeleteHelp" class="text-secondary">
+                    email
+                  </small>
+                </div>
+              </div>
+              <!-- class="form-row" -->
+            </div>
+            <!-- class="card-body" -->
+            <div class="card-footer">
+              <div class="form-row">
+                <div class="col">
+                  <button onclick="deleteRecord()" type="button" class="btn btn-info btn-sm form-control form-control-sm">
+                    delete record
+                  </button>
+                </div>
+                <div class="col">
+                  <button onclick="formDelete.reset()" type="button" class="btn btn-info btn-sm form-control form-control-sm">
+                    reset delete
+                  </button>
+                </div>
+              </div>
+              <!-- class="form-row" -->
+            </div>
+            <!-- class="card-footer" -->
+          </form>
+          <!-- id="formDelete" … -->
+        </div>
+        <!-- aria-label="cardInputDelete" -->
+        <div id="cardOutputDelete" class="card mb-1">
+          <div class="card-header text-secondary">delete output</div>
+          <div id="outputDelete" class="card-body">
+          </div>
+          <div class="card-footer">
+            <div class="form-row">
+              <div class="col-6">
+                <button onclick="clearNodes2('outputDelete', 0)" type="button" class="btn btn-info btn-sm form-control form-control-sm">
+                  clear delete output
+                </button>
+              </div>
+            </div>
+            <!-- class="form-row" -->
+          </div>
+          <!-- class="card-footer" -->
+        </div>
+        <!-- id="cardOutputDelete" -->
+      </div>
+      <!-- aria-label="cardGroupDelete" -->
+    </div>
+    <!-- id="contentDelete" -->
+    <nav class="border mb-1" style="padding: 0.10rem !important; background-color: rgba(0, 0, 0, 0.03);">
+      <button id="navSearch" href="#contentSearch" data-target="#contentSearch" aria-controls="contentSearch" aria-expanded="false" data-toggle="collapse" type="button" class="btn btn-info btn-block text-left">
+        search
+      </button>
+    </nav>
+    <div id="contentSearch" aria-labelledby="navSearch" data-parent="#accordion" class="collapse">
+      <div aria-label="cardGroupSearch" class="card-group">
+        <div aria-label="cardInputSearch" class="card mb-1">
+          <form id="formSearch" accept-charset="utf-8" method="get" action="#">
+            <div class="card-header text-secondary">search records</div>
+            <div class="card-body">
+              <div class="form-row mb-2">
+                <div class="col">
+                  <input id="ssnSearch" aria-describedby="ssnSearchHelp" placeholder="ssn" type="text" class="form-control form-control-sm">
+                  <small id="ssnSearchHelp" class="text-secondary">
+                    all or part (e.g., 555)
+                  </small>
+                </div>
+                <div class="col">
+                  <input id="nameSearch" aria-describedby="nameSearchHelp" placeholder="name" type="text" class="form-control form-control-sm">
+                  <small id="nameSearchHelp" class="text-secondary">
+                    all or part
+                  </small>
+                </div>
+              </div>
+              <!-- class="form-row mb-2" -->
+              <div class="form-row mb-2">
+                <div class="col">
+                  <input id="ageSearch" aria-describedby="ageSearchHelp" placeholder="age" type="text" class="form-control form-control-sm">
+                  <small id="ageSearchHelp" class="text-secondary">
+                    less than or equal to
+                  </small>
+                </div>
+                <div class="col">
+                  <input id="emailSearch" aria-describedby="emailSearchHelp" placeholder="email" type="text" class="form-control form-control-sm">
+                  <small id="emailSearchHelp" class="text-secondary">
+                    all or part
+                  </small>
+                </div>
+              </div>
+              <!-- class="form-row mb-2" -->
+              <div class="form-row">
+                <div class="col">
+                    <select id="all" aria-describedby="allHelp" class="custom-select custom-select-sm text-secondary">
+                      <option value="search">search</option>
+                      <option value="retrieveAll">retrieve all</option>
+                    </select>
+                  <small id="allHelp" class="text-secondary">
+                    search or retrieve all
+                  </small>
+                </div>
+              </div>
+              <!-- class="form-row" -->
+            </div>
+            <!-- class="card-body" -->
+            <div class="card-footer">
+              <div class="form-row">
+                <div class="col">
+                  <button onclick="search()" type="button" class="btn btn-info btn-sm form-control form-control-sm">
+                    search
+                  </button>
+                </div>
+                <div class="col">
+                  <button onclick="formSearch.reset()" type="button" class="btn btn-info btn-sm form-control form-control-sm">
+                    reset search
+                  </button>
+                </div>
+              </div>
+              <!-- class="form-row" -->
+            </div>
+            <!-- class="card-footer" -->
+          </form>
+          <!--  id="formSearch" -->
+        </div>
+        <!-- aria-label="cardInputSearch" -->
+        <div id="cardOutputSearch" class="card mb-1">
+          <div class="card-header text-secondary">search output</div>
+          <div id="outputSearch" class="card-body">
+          </div>
+          <div class="card-footer">
+            <div class="form-row">
+              <div class="col">
+                <button onclick="clearNodes2('outputSearch', 0)" type="button" class="btn btn-info btn-sm form-control form-control-sm">
+                  clear seach output
+                </button>
+              </div>
+              <div class="col">
+              </div>
+            </div>
+            <!-- class="form-row" -->
+          </div>
+          <!-- class="card-footer" -->
+        </div>
+        <!-- id="cardOutputSearch"-->
+      </div>
+      <!-- aria-label="cardGroupSearch" -->
+    </div>
+    <!-- id="contentSearch" -->
+    <nav class="border mb-1" style="padding: 0.10rem !important; background-color: rgba(0, 0, 0, 0.03);">
+      <button id="navDownload" href="#contentDownload" data-target="#contentDownload" aria-controls="contentDownload" aria-expanded="false" data-toggle="collapse" type="button" class="btn btn-info btn-block text-left">
+        download
+      </button>
+    </nav>
+    <div id="contentDownload" aria-labelledby="navDownload" data-parent="#accordion" class="collapse">
+      <div aria-label="cardGroupDownload" class="card-group">
+        <div aria-label="cardDownloadUpdate" class="card mb-1">
+          <form id="formDownload" accept-charset="utf-8" method="get" action="#">
+            <div class="card-header text-secondary">download data</div>
+            <div class="card-body"></div>
+            <div class="card-footer">
+              <div class="form-row">
+                <div class="col-6">
+                  <button onclick="downloadData()" type="button" class="btn btn-info btn-sm form-control form-control-sm">
+                    download
+                  </button>
+                </div>
+              </div>
+              <!-- class="form-row" -->
+            </div>
+            <!-- class="card-footer" -->
+          </form>
+          <!--  id="formDownload" -->
+        </div>
+        <!-- aria-label="cardDownloadUpdate" -->
+        <div id="cardOutputDownload" class="card mb-1">
+          <div class="card-header text-secondary">download output</div>
+          <div id="outputDownload" class="card-body">
+          </div>
+          <div class="card-footer">
+            <div class="form-row">
+              <div class="col-6">
+                <button onclick="clearNodes2('outputDownload', 0)" type="button" class="btn btn-info btn-sm form-control form-control-sm">
+                  clear download output
+                </button>
+              </div>
+            </div>
+            <!-- class="form-row" -->
+          </div>
+          <!-- class="card-footer" -->
+        </div>
+        <!-- id="cardOutputDownload" -->
+      </div>
+      <!-- aria-label="cardGroupDownload" -->
+    </div>
+    <!-- id="contentDownload" -->
+  </div>
+  <!-- id="accordion" -->
+
+  <p class="lead mt-2 mb-1">
+    <small>Why indexedDB?</small>
+  </p>
+  <p class="small">
+    A practical alternative to MDN’s example (MDN contributors 2023).
+  </p>
+
+  <p class="lead mb-1">
+    <small>How to use IndexedDB</small>
+  </p>
+  <p class="small">
+    <a href="https://github.com/Project4Dimensions/jsFun/blob/main/docs/indexedDB.html">
+      See the source code of this page</a>
+  </p>
+
+  <p class="lead mb-1">
+    <small>Tested with following web browsers</small></p>
+  <p id="browsers" class="small"></p>
+
+  <p class="lead mb-1">
+    <small>Reference</small>
+  </p>
+  <p class="hanging-indent small">
+    MDN contributors. 2023. “Using IndexedDB.”<br>
+    Last modified August 23, 2023.<br>
+    <a href="https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Using_IndexedDB">
+      https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Using_IndexedDB</a>.
+  </p>
+
+</main>
+
+<footer class="container mt-auto pt-2 bg-light">
+  <hr class="mb-1">
+  <div class="float-start">
+    <a class="small" href="https://github.com/Project4Dimensions/jsFun/blob/main/indexedDB.md">
+      IndexedDB&nbsp;· jsFun&nbsp;· Project4Dimensions</a>
+  </div>
+  <div class="float-end">
+    <a href="#"></a>
+  </div>
+</footer>
+
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
+<script src="../strInnerHTML.js"></script>
+<script src="../browsers.js"></script>
+<script>
+let dataToggle = "tab";
+window.onload = function() {strInnerHTML("browsers", browsers());};
+</script>
+<script src="../indexedDB.js"></script>
+
+</html>
